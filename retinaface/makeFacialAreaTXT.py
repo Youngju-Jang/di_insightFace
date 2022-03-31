@@ -50,8 +50,9 @@ for ori_path in ori_paths : #이미지 하나당
 print("end")
 
 
+
 '''
-len(obj.keys()) >> 사진에 얼굴수대로 나옴. 한명이라 face_1
+len(obj.keys()) >> 사진에 얼굴수대로 나옴 >> 한명이라 face_1
 
 print(obj['face_1'])
 {'score': 0.9993307590484619, 'facial_area': [168, 145, 346, 390], x1 y1 x2 y2 일듯? 
