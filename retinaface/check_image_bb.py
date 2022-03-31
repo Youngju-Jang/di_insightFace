@@ -1,14 +1,15 @@
 import cv2
 from retinaface import RetinaFace
 
-img_path = "\dataset\dataTest\images\\test1.jpg"
-label_path = "\dataset\dataTest\labels\\test1.txt"
+img_path = "\dataset\dataTest\images\\test5.jpg"
+label_path = "\dataset\dataTest\labels\\test5.txt"
 ori_dict = RetinaFace.detect_faces(img_path)
-xyxy = ori_dict['face_1']['facial_area']
 
 img = cv2.imread(img_path, 1)
 
-cv2.rectangle(img, (xyxy[0],xyxy[1]), (xyxy[2], xyxy[3]), (0,255), 3)
+for face_n in ori_dict:
+    xyxy = ori_dict[face_n]['facial_area']
+    cv2.rectangle(img, (xyxy[0],xyxy[1]), (xyxy[2], xyxy[3]), (0,255), 1)
 
 cv2.imshow('bb_img', img)
 cv2.waitKey(0)

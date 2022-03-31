@@ -42,6 +42,7 @@ for ori_path in ori_paths : #이미지 하나당
             ## 한장에 여러명일경우로 수정
             # txt화
             f.write(" ".join(str(_) for _ in xywh))
+            f.write('\n')
 
 
 
