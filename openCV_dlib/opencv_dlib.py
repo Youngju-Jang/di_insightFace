@@ -21,6 +21,9 @@ color_blue = (239,207,137)
 color_cyan = (255,200,0)
 color_black = (0, 0, 0)
 
+#
+
+
 
 # 사진한장 안에 사람 한명 face 의 landmark의 mask type값 설정
 def make_mask_mark(type): # type = 1,2,3
@@ -76,7 +79,9 @@ def fill_img_mask(img, color, fmask):
 
 
 # 이미지 전 처 리
-for img_path in imgs_path[:5]:
+cnt = 0
+for img_path in imgs_path[50:]:
+    cnt += 1
     img_file = img_path.split('\\')[-1] #파일명.jpg
 
     img = cv2.imread(img_path)
@@ -88,8 +93,10 @@ for img_path in imgs_path[:5]:
     faces = detector(gray, 1) # rectangles[[(167, 142) (390, 365)]]
     #print("Number of faces detected: ", len(faces))
 
+    max_face_height = 0
+
     for face in faces:
-        ''' 
+
         # (x1,x2,y1,y2) 만들기
         # Using a for loop in order to extract the specific coordinates (x1,x2,y1,y2)
         x1 = face.left()
@@ -97,24 +104,37 @@ for img_path in imgs_path[:5]:
         x2 = face.right()
         y2 = face.bottom()
         # Drawing a rectangle around the face detected
-        cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 1)
-        '''
+        # cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 1)
+
+        if max_face_height < (y2 - y1):
+            max_face_height = y2 - y1
+            m_y2 = y2
+            m_y1 = y1
+            m_x1 = x1
+            m_x2 = x2
 
         ''' 
         # Get the shape using the predictor
         landmarks = predictor(gray, face)
         #68개 다찍기
         for n in range(0, 68):
-            x = landmarks.part(n).x
+            x = landmarks.part(n).x1
             y = landmarks.part(n).y
             img_landmark = cv2.circle(img, (x, y), 4, (0, 0, 255), -1)
         '''
         # 마스크부분 점위치
-        fmask = make_mask_mark(2)
+        #fmask = make_mask_mark(2)
 
         # 이미지에 마스크그리기
-        img = fill_img_mask(img, color_blue, fmask)
-
+        #img = fill_img_mask(img, color_blue, fmask)
+    # 못쓰는이미지 갖다버리기 해야하는뎅 ㅇㅅㅇ 뭔가이상하닷
+    if (max_face_height / 500) <= 1/4 :
+        print(cnt , " >>face_height", max_face_height)
+        print("img_shape", img.shape)
+        cv2.rectangle(img, (m_x1, m_y1), (m_x2, m_y2), (0, 255, 0), 1)
+        cv2.imshow("small_face", img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
     '''
     cv2.imshow("image", img)
     cv2.waitKey(0)
@@ -122,6 +142,6 @@ for img_path in imgs_path[:5]:
     '''
 
     # Save the output file for testing
-    outputNameofImage = "C:\dataset\Mask\\" + img_file
-    print("Saving output image to", outputNameofImage)
-    cv2.imwrite(outputNameofImage, img)
+    #outputNameofImage = "C:\dataset\Mask\\" + img_file
+    #print("Saving output image to", outputNameofImage)
+    #cv2.imwrite(outputNameofImage, img)
